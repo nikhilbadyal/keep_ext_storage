@@ -19,6 +19,22 @@ class MyApp extends StatefulWidget {
 String error = 'Something bad occurred';
 
 class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: MyBeautifulApp(),
+    );
+  }
+}
+
+class MyBeautifulApp extends StatefulWidget {
+  const MyBeautifulApp({Key? key}) : super(key: key);
+
+  @override
+  _MyBeautifulAppState createState() => _MyBeautifulAppState();
+}
+
+class _MyBeautifulAppState extends State<MyBeautifulApp> {
   String _platformVersion = 'Unknown';
   var str1 = error;
   var str2 = error;
@@ -83,12 +99,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: ListView(children: [
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Keep Storage'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: ListView(children: [
+          const Text(
+            'Make sure to give required permission',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+          ),
+          const Padding(padding: EdgeInsets.only(bottom: 40)),
           Text('Running on: $_platformVersion\n'),
           Text('Path is: $str1'),
           Text('Path is: $str2'),
@@ -104,8 +126,10 @@ class _MyAppState extends State<MyApp> {
           Text('Path is: $str12'),
           Text('Path is: $str13'),
         ]),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          try {
             const fileName = 'TestFile.txt';
             var file = await File('$str1/$fileName').create();
             await file.writeAsString(str1);
@@ -133,9 +157,12 @@ class _MyAppState extends State<MyApp> {
             await file.writeAsString(str12);
             file = await File('$str13/$fileName').create(recursive: true);
             await file.writeAsString(str13);
-          },
-          label: const Text('Save files to all'),
-        ),
+          } catch (e) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(e.toString())));
+          }
+        },
+        label: const Text('Save files to all'),
       ),
     );
   }

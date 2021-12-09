@@ -17,7 +17,7 @@ class KeepExtStoragePlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "keepext_storage")
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, "keep_ext_storage")
         channel.setMethodCallHandler(this)
     }
 
